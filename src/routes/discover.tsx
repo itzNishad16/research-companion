@@ -1,0 +1,6 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { AppShell, PageHeader, PaperCard, SearchControls } from "@/components/research-ui";
+import { papers } from "@/lib/research-data";
+
+export const Route = createFileRoute("/discover")({ head: () => ({ meta: [{title:"Discover Papers — ResearchAI"},{name:"description",content:"Search and evaluate academic papers with AI-assisted relevance insights."},{property:"og:title",content:"Discover Papers — ResearchAI"},{property:"og:description",content:"Search and evaluate academic papers with AI-assisted relevance insights."},{property:"og:type",content:"website"},{name:"twitter:card",content:"summary_large_image"}] }), component: Discover });
+function Discover(){ return <AppShell><PageHeader eyebrow="Discovery Engine" title="Discover Papers" description="Search across journals, conferences, and open research archives."/><SearchControls/><div className="mb-3 flex items-center justify-between"><p className="text-xs text-muted-foreground">14,820 results · AI-ranked for your research profile</p></div><section className="grid gap-3 xl:grid-cols-2">{papers.map(p=><PaperCard key={p.id} paper={p}/>)}</section></AppShell> }
