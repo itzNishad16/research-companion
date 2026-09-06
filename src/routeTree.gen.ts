@@ -10,12 +10,20 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AgentRouteImport } from './routes/agent'
 import { Route as DiscoverRouteImport } from './routes/discover'
+import { Route as InsightsRouteImport } from './routes/insights'
 import { Route as LibraryRouteImport } from './routes/library'
+import { Route as PapersPaperIdRouteImport } from './routes/papers.$paperId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AgentRoute = AgentRouteImport.update({
+  id: '/agent',
+  path: '/agent',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DiscoverRoute = DiscoverRouteImport.update({
@@ -23,40 +31,71 @@ const DiscoverRoute = DiscoverRouteImport.update({
   path: '/discover',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InsightsRoute = InsightsRouteImport.update({
+  id: '/insights',
+  path: '/insights',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LibraryRoute = LibraryRouteImport.update({
   id: '/library',
   path: '/library',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PapersPaperIdRoute = PapersPaperIdRouteImport.update({
+  id: '/papers/$paperId',
+  path: '/papers/$paperId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/agent': typeof AgentRoute
   '/discover': typeof DiscoverRoute
+  '/insights': typeof InsightsRoute
   '/library': typeof LibraryRoute
+  '/papers/$paperId': typeof PapersPaperIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/agent': typeof AgentRoute
   '/discover': typeof DiscoverRoute
+  '/insights': typeof InsightsRoute
   '/library': typeof LibraryRoute
+  '/papers/$paperId': typeof PapersPaperIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/agent': typeof AgentRoute
   '/discover': typeof DiscoverRoute
+  '/insights': typeof InsightsRoute
   '/library': typeof LibraryRoute
+  '/papers/$paperId': typeof PapersPaperIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/discover' | '/library'
+  fullPaths:
+    '/' | '/agent' | '/discover' | '/insights' | '/library' | '/papers/$paperId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/discover' | '/library'
-  id: '__root__' | '/' | '/discover' | '/library'
+  to:
+    '/' | '/agent' | '/discover' | '/insights' | '/library' | '/papers/$paperId'
+  id:
+    | '__root__'
+    | '/'
+    | '/agent'
+    | '/discover'
+    | '/insights'
+    | '/library'
+    | '/papers/$paperId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AgentRoute: typeof AgentRoute
   DiscoverRoute: typeof DiscoverRoute
+  InsightsRoute: typeof InsightsRoute
   LibraryRoute: typeof LibraryRoute
+  PapersPaperIdRoute: typeof PapersPaperIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -68,11 +107,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/agent': {
+      id: '/agent'
+      path: '/agent'
+      fullPath: '/agent'
+      preLoaderRoute: typeof AgentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/discover': {
       id: '/discover'
       path: '/discover'
       fullPath: '/discover'
       preLoaderRoute: typeof DiscoverRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/insights': {
+      id: '/insights'
+      path: '/insights'
+      fullPath: '/insights'
+      preLoaderRoute: typeof InsightsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/library': {
@@ -82,13 +135,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LibraryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/papers/$paperId': {
+      id: '/papers/$paperId'
+      path: '/papers/$paperId'
+      fullPath: '/papers/$paperId'
+      preLoaderRoute: typeof PapersPaperIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AgentRoute: AgentRoute,
   DiscoverRoute: DiscoverRoute,
+  InsightsRoute: InsightsRoute,
   LibraryRoute: LibraryRoute,
+  PapersPaperIdRoute: PapersPaperIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
