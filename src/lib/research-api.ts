@@ -30,7 +30,8 @@ export async function searchResearchPapers(query: string): Promise<Paper[]> {
   });
   if (!res.ok) throw new Error(`Search failed (${res.status})`);
   const data = (await res.json()) as SearchResponse;
-  return (data.papers ?? []).map(mapBackendPaper);
+  if (!Array.isArray(data.papers)) throw new Error("Unexpected response from search service");
+  return data.papers.map(mapBackendPaper);
 }
 
 function mapBackendPaper(p: BackendPaper, index: number): Paper {
