@@ -2,12 +2,13 @@ export type Paper = {
   id: string;
   title: string;
   authors: string;
-  year: number;
+  year?: number;
   venue: string;
   abstract: string;
   topics: string[];
   citations: number;
-  relevance: number;
+  relevance?: number;
+  url?: string;
   favorite?: boolean;
 };
 
