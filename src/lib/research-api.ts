@@ -2,7 +2,7 @@ import type { Paper } from "@/lib/research-data";
 
 // n8n backend endpoint (temporary Cloudflare Quick Tunnel URL — update here when it changes)
 export const RESEARCH_SEARCH_URL =
-  "https://thomas-runs-competing-scales.trycloudflare.com/webhook/research-search";
+  "https://pennsylvania-stable-involved-performing.trycloudflare.com/webhook/research-search";
 
 export type BackendPaper = {
   title: string;
