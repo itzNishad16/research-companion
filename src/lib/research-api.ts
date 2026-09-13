@@ -1,8 +1,9 @@
 import type { Paper } from "@/lib/research-data";
 
-// n8n backend endpoint (temporary Cloudflare Quick Tunnel URL — update here when it changes)
-export const RESEARCH_SEARCH_URL =
-  "https://pennsylvania-stable-involved-performing.trycloudflare.com/webhook/research-search";
+// n8n backend endpoint (temporary Cloudflare Quick Tunnel URL)
+// Update this URL whenever the Cloudflare Quick Tunnel changes.
+export const RESEARCH_AGENT_URL =
+  "https://sussex-packets-walls-comparable.trycloudflare.com";
 
 export type BackendPaper = {
   title: string;
@@ -20,21 +21,38 @@ export type BackendPaper = {
   research_gap: string;
 };
 
-type SearchResponse = { papers?: BackendPaper[] };
+type SearchResponse = {
+  papers?: BackendPaper[];
+};
 
-export async function searchResearchPapers(query: string): Promise<Paper[]> {
+export async function searchResearchPapers(
+  query: string
+): Promise<Paper[]> {
   const res = await fetch(RESEARCH_SEARCH_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify({ query }),
   });
-  if (!res.ok) throw new Error(`Search failed (${res.status})`);
+
+  if (!res.ok) {
+    throw new Error(`Search failed (${res.status})`);
+  }
+
   const data = (await res.json()) as SearchResponse;
-  if (!Array.isArray(data.papers)) throw new Error("Unexpected response from search service");
+
+  if (!Array.isArray(data.papers)) {
+    throw new Error("Unexpected response from search service");
+  }
+
   return data.papers.map(mapBackendPaper);
 }
 
-function mapBackendPaper(p: BackendPaper, index: number): Paper {
+function mapBackendPaper(
+  p: BackendPaper,
+  index: number
+): Paper {
   return {
     id: p.url || `result-${index}`,
     title: p.title || "Untitled paper",

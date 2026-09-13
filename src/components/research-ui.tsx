@@ -8,6 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import researcherProfile from "@/assets/researcher-profile.jpg";
 import type { Paper } from "@/lib/research-data";
+import { toggleSavedPaper } from "@/lib/library-api";
 
 const navItems = [
   { to: "/", label: "Overview", icon: LayoutDashboard },
@@ -71,12 +72,67 @@ export function ResearchTag({ children }: { children: ReactNode }) { return <spa
 
 export function PaperCard({ paper, compact = false }: { paper: Paper; compact?: boolean }) {
   const [saved, setSaved] = useState(Boolean(paper.favorite));
-  if (compact) return <div className="group grid grid-cols-[minmax(0,1fr)_auto] gap-4 border-b border-border px-4 py-3 transition-colors last:border-b-0 hover:bg-accent/30"><div className="min-w-0"><Link to="/papers/$paperId" params={{ paperId: paper.id }} className="font-display text-sm font-medium hover:text-primary">{paper.title}</Link><p className="mt-1 truncate text-[11px] text-muted-foreground">{paper.authors} · {paper.venue} · {paper.citations} citations</p></div><div className="flex shrink-0 gap-1"><Button variant="ghost" size="icon-sm" onClick={() => setSaved(!saved)} aria-label="Favorite paper"><Heart className={saved ? "fill-primary text-primary" : ""} /></Button><Button variant="ghost" size="icon-sm" asChild><Link to="/papers/$paperId" params={{ paperId: paper.id }} aria-label="Open paper"><BookOpen /></Link></Button></div></div>;
-  return <article className="group rounded-lg border border-border bg-card p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5">
-    <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3"><div className="min-w-0"><p className="text-[10px] uppercase text-info">{paper.venue}{paper.year ? ` · ${paper.year}` : ""}</p><Link to="/papers/$paperId" params={{ paperId: paper.id }} className="mt-1 block font-display text-base font-semibold leading-snug hover:text-primary">{paper.title}</Link><p className="mt-1 text-xs text-muted-foreground">{paper.authors}</p></div>{paper.relevance != null && <div className="rounded-md border border-primary/20 bg-primary/10 px-2 py-1 text-center"><p className="font-display text-sm font-semibold text-primary">{paper.relevance}%</p><p className="text-[9px] text-muted-foreground">match</p></div>}</div>
-    <p className="mt-3 line-clamp-2 text-xs leading-5 text-muted-foreground">{paper.abstract}</p><div className="mt-3 flex flex-wrap gap-1.5">{paper.topics.map(t => <ResearchTag key={t}>{t}</ResearchTag>)}</div>
-    <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border pt-3"><span className="mr-auto text-[11px] text-muted-foreground">{paper.citations} citations</span><Button variant="ghost" size="sm"><Sparkle />AI Summary</Button><Button variant="outline" size="sm" onClick={() => setSaved(!saved)}>{saved ? <Heart className="fill-primary text-primary" /> : <Heart />}{saved ? "Saved" : "Save"}</Button>{paper.url ? <Button size="sm" asChild><a href={paper.url} target="_blank" rel="noopener noreferrer">Open Paper</a></Button> : <Button size="sm" asChild><Link to="/papers/$paperId" params={{ paperId: paper.id }}>Open Paper</Link></Button>}</div>
-  </article>;
+  const [saving, setSaving] = useState(false);
+
+  const handleToggleSave = async () => {
+    if (saving) return;
+
+    try {
+      setSaving(true);
+      const nextSaved = await toggleSavedPaper(paper, saved);
+      setSaved(nextSaved);
+    } catch (error) {
+      console.error("Failed to update saved paper:", error);
+      alert("Could not update your library. Please try again.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (compact) {
+    return (
+      <div className="group grid grid-cols-[minmax(0,1fr)_auto] gap-4 border-b border-border px-4 py-3 transition-colors last:border-b-0 hover:bg-accent/30">
+        <div className="min-w-0">
+          <Link to="/papers/$paperId" params={{ paperId: paper.id }} className="font-display text-sm font-medium hover:text-primary">{paper.title}</Link>
+          <p className="mt-1 truncate text-[11px] text-muted-foreground">{paper.authors} · {paper.venue} · {paper.citations} citations</p>
+        </div>
+        <div className="flex shrink-0 gap-1">
+          <Button variant="ghost" size="icon-sm" onClick={handleToggleSave} disabled={saving} aria-label={saved ? "Remove from library" : "Save paper"}>
+            <Heart className={saved ? "fill-primary text-primary" : ""} />
+          </Button>
+          <Button variant="ghost" size="icon-sm" asChild>
+            <Link to="/papers/$paperId" params={{ paperId: paper.id }} aria-label="Open paper"><BookOpen /></Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <article className="group rounded-lg border border-border bg-card p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5">
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3">
+        <div className="min-w-0">
+          <p className="text-[10px] uppercase text-info">{paper.venue}{paper.year ? ` · ${paper.year}` : ""}</p>
+          <Link to="/papers/$paperId" params={{ paperId: paper.id }} className="mt-1 block font-display text-base font-semibold leading-snug hover:text-primary">{paper.title}</Link>
+          <p className="mt-1 text-xs text-muted-foreground">{paper.authors}</p>
+        </div>
+        {paper.relevance != null && <div className="rounded-md border border-primary/20 bg-primary/10 px-2 py-1 text-center"><p className="font-display text-sm font-semibold text-primary">{paper.relevance}%</p><p className="text-[9px] text-muted-foreground">match</p></div>}
+      </div>
+
+      <p className="mt-3 line-clamp-2 text-xs leading-5 text-muted-foreground">{paper.abstract}</p>
+      <div className="mt-3 flex flex-wrap gap-1.5">{paper.topics.map(t => <ResearchTag key={t}>{t}</ResearchTag>)}</div>
+
+      <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border pt-3">
+        <span className="mr-auto text-[11px] text-muted-foreground">{paper.citations} citations</span>
+        <Button variant="ghost" size="sm"><Sparkle />AI Summary</Button>
+        <Button variant="outline" size="sm" onClick={handleToggleSave} disabled={saving}>
+          {saved ? <Heart className="fill-primary text-primary" /> : <Heart />}
+          {saved ? "Saved" : saving ? "Saving..." : "Save"}
+        </Button>
+        {paper.url ? <Button size="sm" asChild><a href={paper.url} target="_blank" rel="noopener noreferrer">Open Paper</a></Button> : <Button size="sm" asChild><Link to="/papers/$paperId" params={{ paperId: paper.id }}>Open Paper</Link></Button>}
+      </div>
+    </article>
+  );
 }
 
 export function SearchControls({ query, onQueryChange, onSearch, loading }: { query: string; onQueryChange: (value: string) => void; onSearch: () => void; loading: boolean }) { return <Panel className="mb-5 p-3"><form className="flex flex-col gap-3 md:flex-row" onSubmit={(e) => { e.preventDefault(); onSearch(); }}><div className="flex h-11 min-w-0 flex-1 items-center gap-3 rounded-md border border-border bg-background px-3"><FileSearch className="size-4 text-primary" /><input className="min-w-0 flex-1 bg-transparent text-sm outline-none" placeholder="Search millions of research papers…" value={query} onChange={(e) => onQueryChange(e.target.value)} /></div><Button type="submit" className="h-11" disabled={loading}>{loading ? <span className="size-4 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" /> : <Search />}{loading ? "Searching" : "Search"}</Button></form><div className="mt-3 flex flex-wrap gap-2">{["Year: 2020–2026", "Topic: All", "Sort: Relevance"].map(x => <Button key={x} variant="outline" size="sm"><SlidersHorizontal />{x}</Button>)}</div></Panel>; }
