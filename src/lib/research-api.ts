@@ -5,6 +5,8 @@ import type { Paper } from "@/lib/research-data";
 export const RESEARCH_AGENT_URL =
   "https://sussex-packets-walls-comparable.trycloudflare.com";
 
+export const RESEARCH_SEARCH_URL = `${RESEARCH_AGENT_URL}/webhook/research-search`;
+
 export type BackendPaper = {
   title: string;
   authors: string;

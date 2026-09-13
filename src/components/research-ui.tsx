@@ -1,12 +1,11 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
 import {
-  BarChart3, Bell, BookOpen, Bot, BrainCircuit, ChevronDown, Compass,
+  BarChart3, BookOpen, Bot, BrainCircuit, Compass,
   FileSearch, Grid2X2, Heart, LayoutDashboard, Library, List, Menu, Search,
   Settings, SlidersHorizontal, Sparkle, X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import researcherProfile from "@/assets/researcher-profile.jpg";
 import type { Paper } from "@/lib/research-data";
 import { toggleSavedPaper } from "@/lib/library-api";
 
@@ -19,7 +18,7 @@ const navItems = [
 ] as const;
 
 export function ResearchMark({ compact = false }: { compact?: boolean }) {
-  return <div className={`${compact ? "size-8" : "size-9"} grid shrink-0 place-items-center rounded-[5px] bg-primary text-primary-foreground`}><BrainCircuit className="size-4" /></div>;
+  return <div className={`${compact ? "size-8" : "size-9"} grid shrink-0 place-items-center rounded-md bg-primary text-primary-foreground`}><BrainCircuit className="size-4" /></div>;
 }
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -44,8 +43,8 @@ export function AppShell({ children }: { children: ReactNode }) {
           <button className="flex w-full items-center gap-3 rounded-md border border-transparent px-3 py-2 text-[13px] text-muted-foreground transition-colors hover:bg-accent/50 hover:text-foreground"><Settings className="size-4" />Settings</button>
         </nav>
         <div className="border-t border-border p-3"><div className="flex items-center gap-3 rounded-md p-2 hover:bg-accent/50">
-          <img src={researcherProfile} alt="Dr. Maya Feld" width={512} height={512} loading="lazy" className="size-9 shrink-0 rounded-full object-cover ring-1 ring-border" />
-          <div className="min-w-0 leading-tight"><p className="truncate text-xs font-medium">Dr. Maya Feld</p><p className="truncate text-[10px] text-muted-foreground">Comp. Neuroscience</p></div><ChevronDown className="ml-auto size-3 text-muted-foreground" />
+          <div className="size-9 shrink-0 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium text-sm">R</div>
+          <div className="min-w-0 leading-tight"><p className="truncate text-xs font-medium">Researcher</p><p className="truncate text-[10px] text-muted-foreground">Account</p></div>
         </div></div>
       </aside>
       {open && <button className="fixed inset-0 z-40 bg-background/80 lg:hidden" onClick={() => setOpen(false)} aria-label="Close navigation overlay" />}
@@ -53,7 +52,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <header className="sticky top-0 z-30 grid h-16 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 border-b border-border bg-background/90 px-4 backdrop-blur-xl sm:px-6">
           <Button variant="ghost" size="icon-sm" className="lg:hidden" onClick={() => setOpen(true)} aria-label="Open navigation"><Menu /></Button>
           <div className="flex h-9 min-w-0 max-w-md items-center gap-2.5 rounded-md border border-border bg-card px-3"><Search className="size-4 shrink-0 text-muted-foreground" /><input className="min-w-0 flex-1 bg-transparent text-[13px] outline-none placeholder:text-muted-foreground" placeholder="Search papers, authors, methods…" /><kbd className="hidden rounded border border-border bg-secondary px-1.5 py-0.5 text-[10px] text-muted-foreground sm:inline">⌘K</kbd></div>
-          <div className="flex items-center gap-2"><div className="hidden h-9 items-center gap-2 rounded-md border border-primary/25 bg-primary/10 px-3 sm:flex"><span className="signal-dot size-2 rounded-full bg-primary" /><span className="text-xs font-medium">Agent Online</span><span className="hidden border-l border-primary/20 pl-2 text-[10px] text-muted-foreground xl:inline">scanning 42 sources</span></div><Button variant="outline" size="icon-sm" aria-label="Notifications"><Bell /></Button></div>
+          <div className="flex items-center gap-2"><div className="hidden h-9 items-center gap-2 rounded-md border border-primary/25 bg-primary/10 px-3 sm:flex"><span className="size-2 rounded-full bg-primary" /><span className="text-xs font-medium">Agent Online</span></div></div>
         </header>
         <main className="mx-auto w-full max-w-[1500px] p-4 sm:p-6">{children}</main>
       </div>
@@ -65,10 +64,10 @@ export function PageHeader({ eyebrow, title, description, actions }: { eyebrow: 
   return <div className="page-rise mb-5 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4"><div className="min-w-0"><p className="text-[11px] uppercase text-primary">{eyebrow}</p><h1 className="mt-1 truncate font-display text-2xl font-semibold sm:text-3xl">{title}</h1>{description && <p className="mt-1 text-sm text-muted-foreground">{description}</p>}</div>{actions}</div>;
 }
 
-export function Panel({ children, className = "" }: { children: ReactNode; className?: string }) { return <section className={`rounded-lg border border-border bg-card ${className}`}>{children}</section>; }
+export function Panel({ children, className = "" }: { children: ReactNode; className?: string }) { return <section className={`rounded-lg border border-border bg-card shadow-sm ${className}`}>{children}</section>; }
 export function PanelHeader({ title, meta, action }: { title: string; meta?: string; action?: ReactNode }) { return <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b border-border px-4 py-3 sm:px-5"><div className="min-w-0"><h2 className="truncate font-display text-sm font-semibold">{title}</h2>{meta && <p className="mt-0.5 text-[11px] text-muted-foreground">{meta}</p>}</div>{action}</div>; }
 
-export function ResearchTag({ children }: { children: ReactNode }) { return <span className="inline-flex rounded border border-border bg-secondary px-2 py-1 text-[10px] text-muted-foreground">{children}</span>; }
+export function ResearchTag({ children }: { children: ReactNode }) { return <span className="inline-flex rounded-md border border-border bg-secondary/50 px-2 py-1 text-[10px] text-muted-foreground">{children}</span>; }
 
 export function PaperCard({ paper, compact = false }: { paper: Paper; compact?: boolean }) {
   const [saved, setSaved] = useState(Boolean(paper.favorite));
@@ -91,7 +90,7 @@ export function PaperCard({ paper, compact = false }: { paper: Paper; compact?: 
 
   if (compact) {
     return (
-      <div className="group grid grid-cols-[minmax(0,1fr)_auto] gap-4 border-b border-border px-4 py-3 transition-colors last:border-b-0 hover:bg-accent/30">
+      <div className="group grid grid-cols-[minmax(0,1fr)_auto] gap-4 border-b border-border px-4 py-3 transition-colors last:border-b-0 hover:bg-accent/50">
         <div className="min-w-0">
           <Link to="/papers/$paperId" params={{ paperId: paper.id }} className="font-display text-sm font-medium hover:text-primary">{paper.title}</Link>
           <p className="mt-1 truncate text-[11px] text-muted-foreground">{paper.authors} · {paper.venue} · {paper.citations} citations</p>
@@ -109,7 +108,7 @@ export function PaperCard({ paper, compact = false }: { paper: Paper; compact?: 
   }
 
   return (
-    <article className="group rounded-lg border border-border bg-card p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5">
+    <article className="group rounded-lg border border-border bg-card p-5 transition-all duration-200 hover:border-primary/30 hover:shadow-md">
       <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3">
         <div className="min-w-0">
           <p className="text-[10px] uppercase text-info">{paper.venue}{paper.year ? ` · ${paper.year}` : ""}</p>
@@ -135,6 +134,6 @@ export function PaperCard({ paper, compact = false }: { paper: Paper; compact?: 
   );
 }
 
-export function SearchControls({ query, onQueryChange, onSearch, loading }: { query: string; onQueryChange: (value: string) => void; onSearch: () => void; loading: boolean }) { return <Panel className="mb-5 p-3"><form className="flex flex-col gap-3 md:flex-row" onSubmit={(e) => { e.preventDefault(); onSearch(); }}><div className="flex h-11 min-w-0 flex-1 items-center gap-3 rounded-md border border-border bg-background px-3"><FileSearch className="size-4 text-primary" /><input className="min-w-0 flex-1 bg-transparent text-sm outline-none" placeholder="Search millions of research papers…" value={query} onChange={(e) => onQueryChange(e.target.value)} /></div><Button type="submit" className="h-11" disabled={loading}>{loading ? <span className="size-4 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" /> : <Search />}{loading ? "Searching" : "Search"}</Button></form><div className="mt-3 flex flex-wrap gap-2">{["Year: 2020–2026", "Topic: All", "Sort: Relevance"].map(x => <Button key={x} variant="outline" size="sm"><SlidersHorizontal />{x}</Button>)}</div></Panel>; }
+export function SearchControls({ query, onQueryChange, onSearch, loading }: { query: string; onQueryChange: (value: string) => void; onSearch: () => void; loading: boolean }) { return <Panel className="mb-5 p-3"><form className="flex flex-col gap-3 md:flex-row" onSubmit={(e) => { e.preventDefault(); onSearch(); }}><div className="flex h-11 min-w-0 flex-1 items-center gap-3 rounded-md border border-border bg-background px-3"><FileSearch className="size-4 text-muted-foreground" /><input className="min-w-0 flex-1 bg-transparent text-sm outline-none" placeholder="Search millions of research papers…" value={query} onChange={(e) => onQueryChange(e.target.value)} /></div><Button type="submit" className="h-11" disabled={loading}>{loading ? <span className="size-4 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" /> : <Search />}{loading ? "Searching" : "Search"}</Button></form><div className="mt-3 flex flex-wrap gap-2">{["Year: 2020–2026", "Topic: All", "Sort: Relevance"].map(x => <Button key={x} variant="outline" size="sm"><SlidersHorizontal />{x}</Button>)}</div></Panel>; }
 
-export function ViewToggle({ view, onChange }: { view: "grid" | "list"; onChange: (view: "grid" | "list") => void }) { return <div className="flex rounded-md border border-border bg-card p-1"><Button variant={view === "grid" ? "secondary" : "ghost"} size="icon-sm" onClick={() => onChange("grid")} aria-label="Grid view"><Grid2X2 /></Button><Button variant={view === "list" ? "secondary" : "ghost"} size="icon-sm" onClick={() => onChange("list")} aria-label="List view"><List /></Button></div>; }
+export function ViewToggle({ view, onChange }: { view: "grid" | "list"; onChange: (view: "grid" | "list") => void }) { return <div className="flex rounded-md border border-border bg-secondary/50 p-1"><Button variant={view === "grid" ? "secondary" : "ghost"} size="icon-sm" onClick={() => onChange("grid")} aria-label="Grid view"><Grid2X2 /></Button><Button variant={view === "list" ? "secondary" : "ghost"} size="icon-sm" onClick={() => onChange("list")} aria-label="List view"><List /></Button></div>; }

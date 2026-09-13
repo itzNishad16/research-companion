@@ -206,7 +206,7 @@ function AgentPage() {
             </div>
 
             <div className="ml-auto flex items-center gap-2 text-xs">
-              <span className="signal-dot size-2 rounded-full bg-success" />
+              <span className="size-2 rounded-full bg-success" />
               Agent Online
             </div>
           </div>
@@ -232,10 +232,7 @@ function AgentPage() {
                     <MessageResponse>
                       Ask me anything about your saved research papers.
 
-                      {"\n\n"}
-
-                      I can compare methodologies, identify research
-                      gaps, summarize papers, and suggest research topics.
+I can compare methodologies, identify research gaps, summarize papers, and suggest research topics.
                     </MessageResponse>
                   </MessageContent>
                 </Message>
@@ -289,7 +286,7 @@ function AgentPage() {
                                 query:
                                   messages[index - 1]?.role ===
                                     "user"
-                                    ? messages[index - 1].content
+                                    ? (messages[index - 1]?.content ?? "Research query")
                                     : "Research query",
                               }}
                             />
@@ -414,7 +411,7 @@ function AgentPage() {
                   )}
 
                   {thinking && index === 1 && (
-                    <span className="ml-auto size-1.5 animate-pulse rounded-full bg-primary" />
+                    <span className="ml-auto size-1.5 rounded-full bg-primary animate-pulse" />
                   )}
                 </div>
               ))}
